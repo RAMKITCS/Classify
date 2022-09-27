@@ -1,4 +1,4 @@
-Service/SAKey.json
-models/model.pkl
-models/tfidf.pkl
+SAKey.json
+model.pkl
+tfidf.pkl
 data.xlsx
