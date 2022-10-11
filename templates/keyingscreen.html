@@ -1,0 +1,364 @@
+{% extends 'base.html' %}
+{% block page %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Keyingscreen</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="static/css/keyingscreen.css" rel="stylesheet" media="all">
+</head>
+
+<body>
+
+  <input type="text" id="x1" hidden>
+  <input type="text" id="x2" hidden>
+  <input type="text" id="y1" hidden>
+  <input type="text" id="y2" hidden>
+  <div class="row">
+    <div class="col-6">
+      <nav class="navbar fixed-top navbar-light bg-light col-6 mx-1 mb-5">
+        <div class="container-fluid">
+          <div class="d-flex align-items-center  justify-content-center hstack gap-5 mx-5 ">
+            <button class="btn btn-outline-primary mx-5" type="botton" onclick="save_desc()">Save</button>
+            <button class="btn btn-outline-info" type="botton">Suspend</button>
+            <button class="btn btn-outline-success mx-5" onclick="return submit();">Submit</button>
+          </div>
+        </div>
+      </nav>
+      <br><input id="pageno" type="text" hidden />
+      <div class="container-fluid table-responsive card card-body pt-0 col-8  table-height-400X mt-5">
+        <table class="table table-bordered mt-2" id="table-fields">
+          <thead>
+            <tr class="bg-dark text-light table-head-sticky">
+              <th>Meta Clause</th>
+              <th>Key Clause</th>
+              <th>
+                <button type="button" class="btn2 btn-success2 btn-xs text-light float-end" id="addField" title="Add">
+                  <i class="fa fa-plus-circle"></i>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr id="initRow">
+              <td colspan="2" class="text-center"><i class="fa fa-plus-circle text-primary "> </i> Add Items...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-6">
+      <!-- Carousel -->
+      <div id="demo" class="carousel slide " data-bs-touch="false" data-bs-interval="false">
+        <div class="row">
+          <div class="col-9 ">
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner ">
+              <div id="load-carousel-items">
+              </div>
+              <!-- Left and right controls/icons -->
+              <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon border  bg-dark fw-bold "></span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                <span class="carousel-control-next-icon border  bg-dark fw-bold"></span>
+              </button>
+            </div>
+          </div>
+          <div class="col-3">
+            <!-- Indicators/dots -->
+            <div class="scroller table-responsive custom-carousel carousel-indicators scrol-img">
+              <table class="table table-bordered">
+                <tbody id="load-imgs"> </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="snackbar">Saved..</div>
+
+  <script>
+    let json_data;
+    let rubber_data;
+    let rowId = 0;
+    let path_url = new URL(window.location.href)
+    let path = path_url.searchParams.get('filename');
+    let focusElem = false;
+    function runFocus() {
+      $("tbody input").on("focus", function () {
+        focusElem = this;
+        console.log(this);
+      });
+    }
+    function loadMetaFields(pageInd) {
+      $("#tbody").html('');
+      console.log("loaded...", pageInd)
+      meta_data = json_data[pageInd][1]
+      console.log("loaded...", meta_data)
+      var val;
+      if (meta_data.length == 0) {
+        $("#tbody").html(`<tr id="initRow">
+          <td colspan="2" class="text-center"><i class="fa fa-plus-circle text-primary "> </i> Add Items...</td>
+        </tr>`);
+      }
+      for (let i = 0; i < meta_data.length; i++) {
+        val = `
+        <tr id="rows${i}">
+          <td>
+            <input type="text" class="form-control meta" placeholder="Enter Meta Clause" value="${meta_data[i]}" />
+          </td>
+          <td>
+            <input type="text" class="form-control key" placeholder="Enter Key Clause" />
+          </td>
+          <td>
+            <button class="btn2 btn-danger2 btn-sm text-light text-center" onclick="$('#rows${i}').remove()">X</button>  
+          </td>
+        </tr>`;
+        $("#tbody").append(val);
+        focusElem = false;
+        runFocus();
+      }
+
+    }
+    async function loadImg() {
+      let url = '';
+      let imgsrc = '';
+      let rub_data = '';
+      let thumbnailImg = "";
+      res = await fetch("/getImageUrl?path=" + path);
+      data1 = await res.text()
+      json_data = JSON.parse(data1)
+      //data1=data;
+      if (res.ok) {
+        for (let i = 0; i < Object.keys(json_data).length; i++) {
+          url = json_data[i][0];
+          //meta_tag = json_data[i][1];
+          // imgsrc += '<div class="gallery"><img src="' + url + '" alt="" id="' + i + '" title="' + i + '" width="400" height="600"><div class="desc" id="desc' + i + '">' + (meta_tag.join(", ")) + '</div></div>';
+
+          if (i === 0) {
+            imgsrc += `
+            
+            <div class="carousel-item active">
+              
+              <img src="${url}" alt="${i}" id="${i}" title="${i}" class="d-block whl-100">
+              
+            </div>`;
+
+            thumbnailImg += `
+              <tr>
+                <td>
+                  <img src="${url}" alt="images${i}" data-bs-target="#demo" data-bs-slide-to="${i}"
+                    class="active img-sm" />
+                </td>
+              </tr>`;
+            //loadMetaFields(i);
+            $("#pageno").val(i)
+
+          } else {
+            imgsrc += `
+            <div class="carousel-item">
+              
+                <img src="${url}" alt="${i}" id="${i}" title="${i}" class="d-block whl-100">
+                
+             </div>`;
+
+            thumbnailImg += `
+              <tr>
+                <td>
+                  <img src="${url}" alt="images${i}" data-bs-target="#demo" 
+                    data-bs-slide-to="${i}" class="img-sm" />
+                </td>
+              </tr>`;
+          }
+        }
+        // console.log(imgsrc)
+        // console.log(thumbnailImg);
+        $("#load-carousel-items").html(imgsrc);
+        $("#load-imgs").html(thumbnailImg);
+        $(document).ready(function () {
+          let mousemove1 = false;
+          $("#demo img").on("mousedown", function (event) {
+            mousemove1 = true;
+            document.getElementById("demo").style.cursor = "crosshair"
+            var offset = $(this).offset(); console.log(offset);
+            console.log($(this), $(this).width(), $(this).height());
+
+            var x = event.pageX - offset.left;
+            var y = event.pageY - offset.top;
+            $("#x1").val(x);
+            $("#y1").val(y);
+          });
+          $("#demo img").on("mouseup", function (event) {
+            mousemove1 = false;
+            document.getElementById("demo").style.cursor = "default"
+            var offset = $(this).offset(); console.log(offset);
+            console.log($(this), $(this).width(), $(this).height());
+            var uiImg_W = $("div .active img").css("width").replace('px', '');
+            var uiImg_H = $("div .active img").css("height").replace('px', '')
+            var x2 = parseInt(event.pageX - offset.left);
+            var y2 = parseInt(event.pageY - offset.top);
+            page_name = $("#demo .carousel-item.active img")[0].src.split('?')[0].split('/').pop();
+            json_w = rubber_data[page_name]['img_W'][0];
+            json_h = rubber_data[page_name]['img_H'][0];
+            x1 = parseInt($("#x1").val());
+            y1 = parseInt($("#y1").val());
+            console.log("bimg", x1, y1, x2, y2);
+            if (x2 < x1) {
+              t = x1
+              x1 = x2
+              x2 = t
+              t = y1
+              y1 = y2
+              y2 = t
+            }
+            console.log("bi2mg", x1, y1, x2, y2);
+            x1 = (x1 / uiImg_W) * json_w;
+            y1 = (y1 / uiImg_H) * json_h;
+            x2 = (x2 / uiImg_W) * json_w;
+            y2 = (y2 / uiImg_H) * json_h;
+            x1 = x1;
+            x2 = x2;
+
+            console.log("img", x1, y1, x2, y2);
+            rubber_out = '';
+            for (key in rubber_data[page_name]['1']) {
+              if (x1 > rubber_data[page_name]['1'][key][1] && x2 < rubber_data[page_name]['1'][key][2] && y1 > rubber_data[page_name]['1'][key][3] && y2 < rubber_data[page_name]['1'][key][4]) {
+                rubber_out = rubber_out + rubber_data[page_name]['1'][key][0] + " ";
+              }
+              if (x1 < rubber_data[page_name]['1'][key][1] && x2 > rubber_data[page_name]['1'][key][2] && y1 < rubber_data[page_name]['1'][key][3] && y2 > rubber_data[page_name]['1'][key][4]) {
+                rubber_out += rubber_data[page_name]['1'][key][0] + " ";
+              }
+            }
+            console.log("out", rubber_out);
+            if (rubber_out != '') {
+              addRubberData(rubber_out);
+            }
+          })
+          $("#demo img").on("mousemove", function (event) { event.preventDefault(); if (mousemove1) { document.getElementById("demo").style.cursor = "crosshair" } });
+
+        })
+        $(document).ready(function () {
+          $('#demo').carousel({
+            interval: 50000
+          })
+          $('#demo').on('slid.bs.carousel', function (event) {
+            //loadMetaFields(event.to);
+            $("#pageno").val(event.to);
+
+          });
+          $('#demo').on('slide.bs.carousel', function (event) {
+
+            console.log("before next")
+            //save_desc();
+          });
+        });
+        $.get("/getSignedurl2?filename=Classification/" + path + "/rubber.json&action=get", function (data) {
+          $.get(data, function (r_data) {
+            rubber_data = JSON.parse(r_data);
+          })
+        });
+      }
+    }
+    function ToastShow() {
+      var x = document.getElementById("snackbar");
+      x.className = "show";
+      setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    loadImg();
+    function save_desc() {
+      ind = $("#pageno").val();
+      save_val = Array();
+      $("#tbody tr td .meta").each(function () {
+        if ($(this).val().trim() != '') {
+          save_val.push($(this).val())
+        }
+      });
+      //console.log(JSON.stringify(json_data[ind][1]), JSON.stringify(save_val))
+      if (JSON.stringify(json_data[ind][1]) != JSON.stringify(save_val)) {
+        let conf = confirm("Are you sure want to save?")
+        if (conf) {
+          json_data[ind][1] = save_val;
+          $.post("/updateJson", data = { "page": ind, "data": JSON.stringify(save_val), "filename": path }, function (data) {
+            console.log("return", data);
+            //$("#desc" + ind).text(save_val.trim());
+            ToastShow();
+          });
+          console.log(ind, save_val)
+        }
+      }
+
+    }
+    function submit() {
+      $.post("/runPy", data = { "filename": "output", "data": path + ".pdf" }, function (data) {
+        console.log(data);
+        window.close();
+      })
+    }
+    function getFocus() {
+      try {
+        $('#tbody tr td input')[$('#tbody tr td input').length - 1].focus();
+      }
+      catch (err) {
+        //console.log(err)
+      }
+    }
+    function addRubberData(data) {
+      $("#initRow").remove();
+      console.log(document.activeElement);
+      if (focusElem) {
+        focusElem.value = data;
+      }
+      else {
+        rowId += 1;
+        let trow = `
+        <tr id="rows${rowId}">
+          <td>
+            <input type="text" class="form-control meta" placeholder="Enter Meta Clause"/>
+          </td>
+          <td>
+            <input type="text" class="form-control key" placeholder="Enter Key Clause" value="${data}"/>
+          </td>
+          <td>
+            <button class="btn2 btn-danger2 btn-sm text-light text-center" onclick="$('#rows${rowId}').remove();getFocus();">X</button>  
+          </td>
+        </tr>`;
+        $("#tbody").append(trow);
+      }
+
+      getFocus();
+    }
+    $(document).ready(function () {
+      $("#addField").click(function () {
+
+        $("#initRow").remove();
+        rowId += 1;
+        let trow = `
+        <tr id="rows${rowId}">
+          <td>
+            <input type="text" class="form-control meta" placeholder="Enter Meta Clause" />
+          </td>
+          <td>
+            <input type="text" class="form-control key" placeholder="Enter Key Clause" />
+          </td>
+          <td>
+            <button class="btn2 btn-danger2 btn-sm text-light text-center" onclick="$('#rows${rowId}').remove();getFocus();">X</button>  
+          </td>
+        </tr>`;
+        $("#tbody").append(trow);
+        getFocus();
+        runFocus();
+
+      })
+    })
+
+  </script>
+</body>
+
+</html>
+{% endblock %}

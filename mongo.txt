@@ -1,0 +1,3 @@
+mongodb+srv://classify:<password>@cluster0.raf2mvt.mongodb.net/?retryWrites=true&w=majority
+exec("def DBconnect():\n\timport os\n\tfrom urllib.parse import quote_plus\n\treturn 'mongodb+srv://'+quote_plus('classify')+':'+quote_plus(os.getenv('mongopass'))+'@cluster0.raf2mvt.mongodb.net/?retryWrites=true&w=majority'")
+Tcs@1234

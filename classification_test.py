@@ -31,12 +31,15 @@ def Predict(path):
         update_status=read_file("Classification/Models/status.txt").decode()
         if update_status=='1':
             write_file("Classification/Models/status.txt","0")
+        import time
+        st1=time.time()
         if "model.pkl" not in os.listdir("models/") or update_status=='1':
             print("Downloading model pkl")
             download_to_local("Classification/Models/model.pkl","models/model.pkl")
         if "tfidf.pkl" not in os.listdir("models/") or update_status=='1':
-            download_to_local("Classification/Models/tfidf.pkl","models/tfidf.pkl")
             print("Downloading tfidf pkl")
+            download_to_local("Classification/Models/tfidf.pkl","models/tfidf.pkl")
+        print("download time",time.time()-st1)
         model=joblib.load("models/model.pkl")
         tfidf_vect_fit=joblib.load("models/tfidf.pkl")
         ocr_data=read_file(path).decode()

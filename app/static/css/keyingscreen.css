@@ -1,0 +1,238 @@
+html,
+body {
+    overflow-x: hidden !important;
+    background-color: black;
+    color: white;
+}
+
+body::-webkit-scrollbar {
+    width: 1em;
+}
+
+body::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #666;
+    outline: 1px solid #eee;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+    background-color: #3f5059;
+    display: block;
+    border: 2px solid black;
+    text-align: center;
+    width: 50%;
+}
+
+div.gallery.selected-high {
+    border: 2px solid #26C6DA;
+}
+
+div.gallery {
+    margin: 25px;
+    border: 1px solid #ccc;
+    float: left;
+    width: 180px;
+    padding: 5px;
+    border-radius: 12.5px;
+}
+
+div.gallery:hover {
+    border: 1px solid #26C6DA;
+}
+
+div.gallery img {
+    width: 100%;
+    height: auto;
+}
+
+div.desc {
+    padding: 5px;
+    text-align: center;
+}
+
+.container {
+    left: 0;
+    width: 50%;
+    position: fixed;
+    height: 100%;
+    /* line-height: 50%; */
+    overflow-y: scroll;
+    flex-wrap: wrap;
+    display: flex;
+}
+
+.selectedimg {
+    display: block;
+    left: 50%;
+    top: 15px;
+    position: fixed;
+    height: 100%;
+    padding: 15px;
+}
+
+.selectedimg img {
+    width: 650px;
+    height: 600px;
+}
+
+/*snakbar*/
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #fff;
+    color: black;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 25%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+div.scroll {
+    /* background-color: #fed9ff; */
+    /* width: 600px; */
+    /* height: 150px; */
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: center;
+    padding: 20px;
+}
+
+.pre-scrollable {
+    max-height: 100%;
+    overflow-y: scroll;
+}
+
+.scroller {
+    /* width: 300px; */
+    height: 100%;
+    overflow-y: scroll;
+    scrollbar-color: rebeccapurple green;
+    scrollbar-width: thin;
+}
+
+.div-scroll {
+    height: 500px;
+}
+
+.test {
+    height: 100%;
+    overflow: scroll;
+    width: 85%;
+    max-width: 50%;
+    /* margin: 0 auto; */
+    /* padding: 3em; */
+    border: 1px solid #666;
+}
+
+.test::-webkit-scrollbar {
+    width: 1em;
+}
+
+.test::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.test::-webkit-scrollbar-thumb {
+    background-color: #666;
+    outline: 1px solid #eee;
+}
+
+/* -------------- Document Image Styles ---------------------------- */
+.custom-carousel.carousel-indicators {
+    left: inherit;
+}
+
+.custom-carousel .active {
+    /* box-shadow: 0px 0px 15px #FFF; */
+    /* border-width: 8px; */
+    border: 5px solid purple;
+}
+
+.img-sm {
+    width: 50px !important;
+    height: 50px !important;
+}
+
+.scroller {
+    /* width: 300px; */
+    height: 600px !important;
+    overflow-y: scroll;
+    scrollbar-color: rebeccapurple green;
+    scrollbar-width: thin;
+    /* scroll-behavior: [ auto | smooth]; */
+}
+
+.scrol-img {
+    top: 0;
+    margin-top: 0;
+    margin-right: 40px !important;
+}
+
+.whl-100 {
+    width: 100%;
+    height: 100%;
+}

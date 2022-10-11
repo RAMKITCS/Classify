@@ -39,7 +39,7 @@ def Predict(path):
         write_file_io("Classification/Models/tfidf.pkl",tfidf_byt)
         del tfidf_byt
         X_train=vectorize(X_train.values.astype('U'),tfidf_vect_fit)
-        model=RandomForestClassifier(n_jobs=-1)
+        model=RandomForestClassifier(n_jobs=-1,n_estimators=100)
         model.fit(X_train,Y_train)
         model_byte=io.BytesIO()
         joblib.dump(model,model_byte,compress=3)
