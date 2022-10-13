@@ -53,8 +53,8 @@ def updateReturn(filter,data):
 def getAllDocType():
     return list(Connection2().find())[0]['doctypes']
 def deleteRec(query):
-    query=[bson.objectid.ObjectId(k) for k in query]
-    return Connection().delete_many({"_id":{"$in":query}})
+    query=bson.objectid.ObjectId(query)
+    return Connection().delete_one({"_id":query})
 def deleteMeta(query):
     query=[bson.objectid.ObjectId(k) for k in query]
     return Connection2().delete_many({"_id":{"$in":query}})
@@ -68,6 +68,9 @@ def findall_json(date=None):
     return json.dumps(list(Connection().find()),default=my_handler)
 def update(id,que,metaset):
     return Connection().update_one({'_id':id},{"$set":{'queue':que,'metaclause':metaset}})
+def updateDoc(id,doc_type):
+    #id=bson.objectid.ObjectId(id)
+    return Connection().update_one({'_id':bson.objectid.ObjectId(id)},{'$set':{'doc_type':doc_type}})
 def delete(query):
     return Connection().delete_many(query)
 #login check

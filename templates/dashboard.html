@@ -179,11 +179,12 @@
             }
         }
         $("#date").val(new Date().getFullYear() + "-" + ("0" + (new Date().getMonth() + 1)).slice(-2) + "-" + ("0" + (new Date().getDate())).slice(-2));
-        function Delete(uuid){
-            console.log(uuid);
+        var dtis;
+        function Delete(uuid,dthis){
+            console.log(uuid,dthis);
+            $("#"+dthis).remove()
             $.get("/deleteRec?slno="+uuid,function(data){
                 console.log(uuid,data);
-                refresh();
             });
             
         }
@@ -196,7 +197,7 @@
                 data = '';
                 comp_count = 0;
                 class_count = 0;
-
+                let ind=1;
                 if (response.length > 0) {
                     for (let i = 0; i < response.length; i++) {
                         d_name = ''
@@ -220,8 +221,9 @@
                             }
                         }
 
-                        data += '<tr class="tr-shadow"><td><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span></label></td><td>' + response[i].doc_type + '</td><td class="' + score_class + '">' + (response[i].pred_score || '') + '</td>' + '<span class="">' + response[i].name + '</span></td><td>' + '<span class="">' + response[i].name + '</span></td><td class="' + status_class + '">' + response[i].queue + '</td><td>' + response[i].upload_date + '</td><td>' + (response[i].completed_date || '') + '</td><td><div class="hstack gap-4"><button class="btn2 btn-info2 btn-xs text-light" data-toggle="tooltip" data-placement="top" title="Edit" onclick=OpenKeying("' + response[i].name.slice(0, -4) + '")><i class="fa fa-pencil"></i></button><button class="btn2 btn-success2 btn-xs" data-toggle="tooltip" data-placement="top" title="Download" onclick=downloadMeta("Classification_Input/' + response[i].name + '"' + ',"' + d_name + '")><i class="fa fa-download text-light"> </i></button><button class="btn2 btn-danger2 btn-xs text-light" data-toggle="tooltip" data-placement="top" title="Delete" onclick="Delete('+"'"+response[i]._id+"'"+');"><i class="fa fa-trash-o"></i></button><button class="btn2 btn-default2 btn-xs text-dark" data-toggle="tooltip" data-placement="top" title="More"><i class="fa fa-ellipsis-h"></i></button></div></td><td>' + response[i]._id + '</td></tr><tr class="spacer"></tr>';
 
+                        data += '<tr class="tr-shadow" id="'+ind+'"><td><label class="au-checkbox"><input type="checkbox"><span class="au-checkmark"></span></label></td><td>' + response[i].doc_type + '</td><td class="' + score_class + '">' + (response[i].pred_score || '') + '</td>' + '<span class="">' + response[i].name + '</span></td><td>' + '<span class="">' + response[i].name + '</span></td><td class="' + status_class + '">' + response[i].queue + '</td><td>' + response[i].upload_date + '</td><td>' + (response[i].completed_date || '') + '</td><td><div class="hstack gap-4"><button class="btn2 btn-info2 btn-xs text-light" data-toggle="tooltip" data-placement="top" title="Edit" onclick=OpenKeying("' + response[i].name.slice(0, -4) +'",'+'"'+response[i]._id+'","'+response[i].doc_type+'")><i class="fa fa-pencil"></i></button><button class="btn2 btn-success2 btn-xs" data-toggle="tooltip" data-placement="top" title="Download" onclick=downloadMeta("Classification_Input/' + response[i].name + '"' + ',"' + d_name + '")><i class="fa fa-download text-light"> </i></button><button class="btn2 btn-danger2 btn-xs text-light" data-toggle="tooltip" data-placement="top" title="Delete" onclick="Delete('+"'"+response[i]._id+"','"+ind+"'"+');"><i class="fa fa-trash-o"></i></button><button class="btn2 btn-default2 btn-xs text-dark" data-toggle="tooltip" data-placement="top" title="More"><i class="fa fa-ellipsis-h"></i></button></div></td><td>' + response[i]._id + '</td></tr><tr class="spacer"></tr>';
+                        ind+=1;
                     }
                 } else {
                     data += "<tr><td colspan='8'><p class='text-primary text-center'>No details available in following date. Try again..! </p></td></tr>"
@@ -248,7 +250,7 @@
                 });
             });
         });
-        function OpenKeying(name) { window.open("/keyingscreen?filename=" + name) }
+        function OpenKeying(name,uuid,doc_type) { console.log(name,uuid); window.open("/keyingscreen?filename=" + name+"&uuid="+uuid+"&doc_type="+doc_type) }
     </script>
 </div>
 {% endblock %}

@@ -159,7 +159,7 @@ def getImageUrls(request:Request,path:str):
 def deleteRec(request:Request):
     slno=request.query_params.get('slno')
     print("uuid",slno)
-    mongoDB.deleteRec([slno])
+    mongoDB.deleteRec(slno)
     print(slno,"deleted successfully")
     return "completed"
 @app.get('/getDocType')
@@ -168,7 +168,11 @@ def getDocType():
 @app.get('/keyingscreen')
 def keyingscreen(request:Request):
     return render_template("keyingscreen.html",{"request":request})
-
+@app.post("/updateDoc")
+def updateDoc(uuid:str=Form(),doc_type:str=Form()):
+    print(uuid,doc_type)
+    mongoDB.updateDoc(uuid,doc_type)
+    return "complleted"
 print("hello",__name__)
 if __name__ == "__main__":
     print("in same main")

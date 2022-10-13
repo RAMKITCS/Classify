@@ -16,40 +16,17 @@
   <input type="text" id="x2" hidden>
   <input type="text" id="y1" hidden>
   <input type="text" id="y2" hidden>
-  <div class="row">
+  <div class="row mt-3 mb-3 col-4 offset-3">
     <div class="col-6">
-      <nav class="navbar fixed-top navbar-light bg-light col-6 mx-1 mb-5">
-        <div class="container-fluid">
-          <div class="d-flex align-items-center  justify-content-center hstack gap-5 mx-5 ">
-            <button class="btn btn-outline-primary mx-5" type="botton" onclick="save_desc()">Save</button>
-            <button class="btn btn-outline-info" type="botton">Suspend</button>
-            <button class="btn btn-outline-success mx-5" onclick="return submit();">Submit</button>
-          </div>
-        </div>
-      </nav>
-      <br><input id="pageno" type="text" hidden />
-      <div class="container-fluid table-responsive card card-body pt-0 col-8  table-height-400X mt-5">
-        <table class="table table-bordered mt-2" id="table-fields">
-          <thead>
-            <tr class="bg-dark text-light table-head-sticky">
-              <th>Meta Clause</th>
-              <th>Key Clause</th>
-              <th>
-                <button type="button" class="btn2 btn-success2 btn-xs text-light float-end" id="addField" title="Add">
-                  <i class="fa fa-plus-circle"></i>
-                </button>
-              </th>
-            </tr>
-          </thead>
-          <tbody id="tbody">
-            <tr id="initRow">
-              <td colspan="2" class="text-center"><i class="fa fa-plus-circle text-primary "> </i> Add Items...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <button class="btn btn-outline-success" onclick="return submit();">Submit</button>
     </div>
     <div class="col-6">
+      <select class="form-select float-end" id="doc-list"> </select>
+    </div>
+  </div>
+
+  <div class="offset-2">
+    <div class="col-10">
       <!-- Carousel -->
       <div id="demo" class="carousel slide " data-bs-touch="false" data-bs-interval="false">
         <div class="row">
@@ -88,6 +65,8 @@
     let rowId = 0;
     let path_url = new URL(window.location.href)
     let path = path_url.searchParams.get('filename');
+    let uuid = path_url.searchParams.get('uuid');
+    let doc_type = path_url.searchParams.get('doc_type');
     let focusElem = false;
     function runFocus() {
       $("tbody input").on("focus", function () {
@@ -295,7 +274,7 @@
 
     }
     function submit() {
-      $.post("/runPy", data = { "filename": "output", "data": path + ".pdf" }, function (data) {
+      $.post("/updateDoc", data = {'uuid':uuid,'doc_type':$('#doc-list').val()}, function (data) {
         console.log(data);
         window.close();
       })
@@ -334,6 +313,19 @@
       getFocus();
     }
     $(document).ready(function () {
+      $("#doc-list option").remove();
+
+      $.get("/getDocType").done(function (data) {
+        for (let value of data) {
+          let label = value.charAt(0).toUpperCase() + value.slice(1);
+
+          let option = `<option value="${value}"> ${label} </option>`;
+          $("#doc-list").append(option);
+        }
+        $("#doc-list").val(doc_type);
+      })
+
+
       $("#addField").click(function () {
 
         $("#initRow").remove();
