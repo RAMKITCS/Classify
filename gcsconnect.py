@@ -21,6 +21,7 @@ if 'gcp_secret' in os.environ and os.environ['gcp_secret'] is not None:
         storage_client = storage.Client(project=os.getenv("project_id"), credentials=storage_credentials)
 #storage_client = storage.Client()
 bucket_name=os.environ['bucket_name']
+print(bucket_name)
 bucket = storage_client.bucket(bucket_name)
 bucket2 = storage_client.bucket(bucket_name+"3")
 from google.cloud import vision

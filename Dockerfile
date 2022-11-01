@@ -1,7 +1,7 @@
 FROM python:3.8-slim
 COPY . /
-ENV bucket_name=noted-cortex-358103_research
-ENV secret_id=projects/245264695657/secrets/icms-service-key/versions/1
+ENV bucket_name=intelligent_classifier
+ENV secret_id=projects/393120312626/secrets/intelligent-service-key/versions/1
 ENV gcp_secret=Service/noted-cortex-358103-caefed9e3bcf.json
 ENV mongopass=Tcs@Projects2022
 # RUN apk add --update-cache --no-cache libgcc libquadmath musl \
