@@ -31,7 +31,7 @@ def Predict(path):
         df=pd.read_excel(read_file_io("Classification/Dataset/data.xlsx"),dtype=str)
         df.dropna(subset=["data","label"],inplace=True)
         X_train,X_test,Y_train,Y_test=train_test_split(df["data"],df["label"],test_size=0.1,random_state=42)
-        tfidf_vect=TfidfVectorizer(analyzer=clean,use_idf=True,max_features=1000)
+        tfidf_vect=TfidfVectorizer(analyzer=clean,use_idf=True,max_features=500)
         tfidf_vect_fit=tfidf_vect.fit(X_train.values.astype('U'))
         tfidf_byt=io.BytesIO()
         joblib.dump(tfidf_vect_fit,tfidf_byt)
