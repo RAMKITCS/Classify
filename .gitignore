@@ -2,3 +2,4 @@ SAKey.json
 model.pkl
 tfidf.pkl
 data.xlsx
+__pycache__

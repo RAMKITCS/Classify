@@ -14,7 +14,7 @@ stop = stopwords.words('english')
 def clean(text):
     word_lem=WordNetLemmatizer()
     tokens=word_tokenize(text)
-    lower=[word.lower() for word in tokens if len(word)>2 and word.isalpha()]
+    lower=[word.lower() for word in tokens if len(word)>2 and word.isalpha() and word not in stop]
     lemmatized_text=[word_lem.lemmatize(word) for word in lower]
     return lemmatized_text
 def vectorize(data,tfidf_vect_fit):
@@ -29,9 +29,11 @@ def Predict(path):
     try:
         from gcsconnect import read_file_io,write_file_io,write_file
         df=pd.read_excel(read_file_io("Classification/Dataset/data.xlsx"),dtype=str)
+        df=df.append(df)
+        df=df.append(df)
         df.dropna(subset=["data","label"],inplace=True)
-        X_train,X_test,Y_train,Y_test=train_test_split(df["data"],df["label"],test_size=0.1,random_state=42)
-        tfidf_vect=TfidfVectorizer(analyzer=clean,use_idf=True,max_features=500)
+        X_train,X_test,Y_train,Y_test=train_test_split(df["data"],df["label"],test_size=0.01)
+        tfidf_vect=TfidfVectorizer(analyzer=clean,use_idf=True,max_features=1000)
         tfidf_vect_fit=tfidf_vect.fit(X_train.values.astype('U'))
         tfidf_byt=io.BytesIO()
         joblib.dump(tfidf_vect_fit,tfidf_byt)
@@ -50,6 +52,14 @@ def Predict(path):
         print("Accuracy",round(accuracy_score(Y_test,y_pred),3))
         print(time.time()-st)
         write_file("Classification/Models/status.txt","1")
+        print(Y_test)
+        a=[]
+        for i in range(len(df["data"])):
+            ocr_data=df["data"][i]
+            df2=pd.DataFrame({"data":[ocr_data]},dtype=str)
+            pred_value=model.predict(vectorize(df2["data"].values.astype('U'),tfidf_vect_fit))
+            a.append(pred_value[0])
+        print(a)
         return "Completed"
     except Exception as e:
         print("Model Train error:",str(e))

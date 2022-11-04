@@ -193,7 +193,7 @@
             let date = $("#date").val().split('-');
             let date_fmt = date[2] + '/' + date[1] + '/' + date[0];
             $.get('/getData?date=' + date_fmt, function (response) {
-                response = JSON.parse(response);
+                response = JSON.parse(response).reverse();
                 console.log(response);
                 data = '';
                 comp_count = 0;
