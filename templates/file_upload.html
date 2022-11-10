@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="col-4 offset-4">
+    <div class="col-10">
+          <h4 class="text-center">Google Data Loss Prevention API</h4>
+            <hr>
+            <br>          
+    </div>
+    {% if not status %}
     <div class="card  p-4">
         <div class="mb-3">
             <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data">
@@ -15,6 +21,7 @@
                 <input class="form-control form-control-sm mb-4 mw-50" id="id" name="doc_name" type="text"
                     placeholder="Enter Document Name..." required />
 
+                <input type="checkbox" id="extract_infotype" /> <label htmlFor="checkbox">Extract possible Info Types </label>
 
                 <div class="text-center">
                     <input type="submit" class="btn btn-primary btn-sm " value="UPLOAD">
@@ -22,9 +29,24 @@
             </form>
         </div>
     </div>
-    {% if status %}
-    <h4 class="text-success" style="text-align: center;">File Uploaded Successfully</h4>
     {% endif %}
-    <script>console.log(status);</script>
+    {% if status %}
+    <h4 class="text-success" style="text-align: center;">File Uploaded Successfully</h4>   
+    <br>DLP Process is running in the background.    
+    <br>
+    <br> This page will be automatically redirected to the Dashboard for tracking progress
+    <div id="counter">10</div> seconds
+    <script>
+        console.log(status);
+        setInterval(function() {
+            var div = document.querySelector("#counter");
+            var count = div.textContent * 1 - 1;
+            div.textContent = count;
+            if (count <= 0) {
+                window.location.replace("/index");
+            }
+        }, 1000);
+    </script>
+    {% endif %}
 </div>
 {% endblock %}

@@ -90,8 +90,8 @@ def upload(request:Request,file:UploadFile=File(),doc_name:str=Form(),):
             print(path)
             print("POST")
             mongoDB.insert({"doc_id":doc_name,"name":filename,"upload_date":dt.utcnow().strftime(("%d/%m/%Y %H:%M:%S")),"queue":"Scan","doc_type":""})
-            #return render_template("file_upload.html",{'request':request,"status":1})
-            return RedirectResponse("/index")
+            return render_template("file_upload.html",{'request':request,"status":1})
+            #return RedirectResponse("/index")
         except Exception as e:
             print(str(e))
             return str(e)
