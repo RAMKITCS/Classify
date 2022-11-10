@@ -54,12 +54,17 @@ def Predict(path):
         write_file("Classification/Models/status.txt","1")
         print(Y_test)
         a=[]
+        b=[]
+        df=pd.read_excel("newdata2.xlsx",dtype=str)
+        #model=dtree
         for i in range(len(df["data"])):
             ocr_data=df["data"][i]
             df2=pd.DataFrame({"data":[ocr_data]},dtype=str)
             pred_value=model.predict(vectorize(df2["data"].values.astype('U'),tfidf_vect_fit))
+            pred_prob=model.predict_proba(vectorize(df2["data"].values.astype('U'),tfidf_vect_fit))
             a.append(pred_value[0])
-        print(a)
+            b.append(pred_prob[0].max())
+        print(a,b)
         return "Completed"
     except Exception as e:
         print("Model Train error:",str(e))
