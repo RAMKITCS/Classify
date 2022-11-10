@@ -3,7 +3,6 @@ model.pkl
 tfidf.pkl
 data.xlsx
 __pycache__
-requirements.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
