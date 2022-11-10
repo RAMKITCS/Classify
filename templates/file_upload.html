@@ -2,7 +2,7 @@
 {% block content %}
 <div class="col-4 offset-4">
     <div class="col-10">
-          <h4 class="text-center">Google Data Loss Prevention API</h4>
+          <h4 class="text-center">Google Data Loss Prevention API Demo</h4>
             <hr>
             <br>          
     </div>
@@ -32,10 +32,10 @@
     {% endif %}
     {% if status %}
     <h4 class="text-success" style="text-align: center;">File Uploaded Successfully</h4>   
-    <br>DLP Process is running in the background.    
+    <h4 class="text-success" style="text-align: center;">DLP Process is running in the background.  </h4>  
     <br>
-    <br> This page will be automatically redirected to the Dashboard for tracking progress
-    <div id="counter">10</div> seconds
+    <h4 class="text-success" style="text-align: center;"> This page will be automatically redirected to the Dashboard for tracking the progress</h4>
+    <div id="counter">10</div> 
     <script>
         console.log(status);
         setInterval(function() {

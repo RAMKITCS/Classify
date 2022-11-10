@@ -90,6 +90,11 @@ def upload(request:Request,file:UploadFile=File(),doc_name:str=Form(),):
             print(path)
             print("POST")
             mongoDB.insert({"doc_id":doc_name,"name":filename,"upload_date":dt.utcnow().strftime(("%d/%m/%Y %H:%M:%S")),"queue":"Scan","doc_type":""})
+            
+            #TODO
+            #  Invoke the DLP's inspect functionality and display the Info Types that are found for the uploaded file.
+            #  https://cloud.google.com/dlp/docs/samples/dlp-inspect-file#dlp_inspect_file-python
+            
             return render_template("file_upload.html",{'request':request,"status":1})
             #return RedirectResponse("/index")
         except Exception as e:
